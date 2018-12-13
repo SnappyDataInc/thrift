@@ -76,7 +76,7 @@ public:
   /// Use default buffer sizes.
   explicit THeaderTransport(const std::shared_ptr<TTransport>& transport, 
                             std::shared_ptr<TConfiguration> config = nullptr)
-    : TVirtualTransport(transport, config),
+    : TVirtualTransport<THeaderTransport, TFramedTransport>(transport, config),
       outTransport_(transport),
       protoId(T_COMPACT_PROTOCOL),
       clientType(THRIFT_HEADER_CLIENT_TYPE),
@@ -91,7 +91,7 @@ public:
   THeaderTransport(const std::shared_ptr<TTransport> inTransport,
                    const std::shared_ptr<TTransport> outTransport,
                    std::shared_ptr<TConfiguration> config = nullptr)
-    : TVirtualTransport(inTransport, config),
+    : TVirtualTransport<THeaderTransport, TFramedTransport>(inTransport, config),
       outTransport_(outTransport),
       protoId(T_COMPACT_PROTOCOL),
       clientType(THRIFT_HEADER_CLIENT_TYPE),

@@ -35,7 +35,7 @@ AS_IF([test "x$PY_PREFIX" = x], [PY_PREFIX="/usr"])
 
 AC_ARG_VAR([JAVA_PREFIX], [Prefix for installing the Java lib jar.
                            Default = "/usr/local/lib"])
-AS_IF([test "x$JAVA_PREFIX" != x], [JAVA_PREFIX="$JAVA_PREFIX/usr/local/lib"],
+AS_IF([test "x$JAVA_PREFIX" != x], [JAVA_PREFIX="$JAVA_PREFIX"],
       [test "x$PREFIX" != x], [JAVA_PREFIX="$PREFIX/usr/local/lib"],
       [JAVA_PREFIX="/usr/local/lib"])
 

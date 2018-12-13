@@ -200,14 +200,35 @@ public:
   void setConnTimeout(int ms);
 
   /**
+   * Get the connect timeout in milliseconds.
+   */
+  int getConnTimeout() {
+    return connTimeout_;
+  }
+
+  /**
    * Set the receive timeout
    */
   void setRecvTimeout(int ms);
 
   /**
+   * Get the receive timeout in milliseconds.
+   */
+  int getRecvTimeout() {
+    return recvTimeout_;
+  }
+
+  /**
    * Set the send timeout
    */
   void setSendTimeout(int ms);
+
+  /**
+   * Get the send timeout in milliseconds.
+   */
+  int getSendTimeout() {
+    return sendTimeout_;
+  }
 
   /**
    * Set the max number of recv retries in case of an THRIFT_EAGAIN

@@ -309,6 +309,20 @@ public:
   static void setManualOpenSSLInitialization(bool manualOpenSSLInitialization) {
     manualOpenSSLInitialization_ = manualOpenSSLInitialization;
   }
+  /**
+   * Set the "inExit_" flag that will avoid SSL_shutdown() for any subsequent
+   * TSSLSocket::close() calls. Typically useful during global destructor/exit
+   * that can otherwise cause unexpected trouble in SSL_shutdown().
+   */
+  static void setInExit(bool inExit) {
+    inExit_ = inExit;
+  }
+  /**
+   * Return the global flag as set by setInExit().
+   */
+  static bool inExit() {
+    return inExit_;
+  }
 
 protected:
   std::shared_ptr<SSLContext> ctx_;
@@ -328,6 +342,7 @@ private:
   static concurrency::Mutex mutex_;
   static uint64_t count_;
   THRIFT_EXPORT static bool manualOpenSSLInitialization_;
+  THRIFT_EXPORT static bool inExit_;
   void setup(std::shared_ptr<TSSLSocket> ssl);
   static int passwordCallback(char* password, int size, int, void* data);
 };

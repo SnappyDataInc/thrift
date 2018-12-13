@@ -26,7 +26,7 @@ all-local:
 		--console=plain
 
 install-exec-hook:
-	./gradlew $(GRADLE_OPTS) install \
+	./gradlew $(GRADLE_OPTS) installDist installJavadoc \
 		-Prelease=true \
 		-Pinstall.path=$(DESTDIR)$(JAVA_PREFIX) \
 		-Pinstall.javadoc.path=$(DESTDIR)$(docdir)/java \

@@ -198,7 +198,7 @@ protected:
   virtual std::string autogen_comment() {
     return std::string("/**\n") + " * " + autogen_summary() + "\n" + " *\n"
            + " * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING\n"
-           + " *  @generated\n" + " */\n";
+           + " *  @generated\n" + " */\n\n";
   }
 
   virtual std::string autogen_summary() {
