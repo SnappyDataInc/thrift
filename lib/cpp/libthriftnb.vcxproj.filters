@@ -24,12 +24,6 @@
     <ClCompile Include="src\thrift\async\TEvhttpServer.cpp">
       <Filter>async</Filter>
     </ClCompile>
-    <ClCompile Include="src\thrift\async\TAsyncProtocolProcessor.cpp">
-      <Filter>async</Filter>
-    </ClCompile>
-    <ClCompile Include="src\thrift\windows\StdAfx.cpp">
-      <Filter>windows</Filter>
-    </ClCompile>
     <ClCompile Include="src\thrift\transport\TNonblockingServerSocket.cpp">
       <Filter>transport</Filter>
     </ClCompile>
@@ -47,13 +41,7 @@
     <ClInclude Include="src\thrift\async\TEvhttpServer.h">
       <Filter>async</Filter>
     </ClInclude>
-    <ClInclude Include="src\thrift\async\TAsyncProtocolProcessor.h">
-      <Filter>async</Filter>
-    </ClInclude>
     <ClInclude Include="src\thrift\windows\config.h">
-      <Filter>windows</Filter>
-    </ClInclude>
-    <ClInclude Include="src\thrift\windows\StdAfx.h">
       <Filter>windows</Filter>
     </ClInclude>
     <ClInclude Include="src\thrift\windows\TargetVersion.h">

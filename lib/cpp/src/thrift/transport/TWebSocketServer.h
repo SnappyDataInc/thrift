@@ -26,7 +26,7 @@
 
 #include <openssl/sha.h>
 
-#include <thrift/config.h>
+#include <thrift/thrift-config.h>
 #include <thrift/protocol/TProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/THttpServer.h>

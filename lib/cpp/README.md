@@ -70,7 +70,8 @@ you run into problems or want to redirect thrift to build and link against your
 own provided third party libraries:
 
 BOOST_ROOT : For boost, e.g. D:\boost_1_55_0
-OPENSSL_ROOT_DIR : For OpenSSL, e.g. D:\OpenSSL-Win32
+OPENSSL64_ROOT_DIR : For 64-bit OpenSSL, e.g. D:\OpenSSL-Win64
+OPENSSL32_ROOT_DIR : For 32-bit OpenSSL, e.g. D:\OpenSSL-Win32
 
 only required by libthriftnb:
 
