@@ -256,7 +256,7 @@ bool TSocket::peek() {
   return (r > 0);
 }
 
-void TSocket::openConnection(struct addrinfo* res) {
+void TSocket::openConnection(struct addrinfo* res, bool logError) {
 
   if (isOpen()) {
     return;
@@ -270,7 +270,9 @@ void TSocket::openConnection(struct addrinfo* res) {
 
   if (socket_ == THRIFT_INVALID_SOCKET) {
     int errno_copy = THRIFT_GET_SOCKET_ERROR;
-    GlobalOutput.perror("TSocket::open() socket() " + getSocketInfo(), errno_copy);
+    if (logError) {
+      GlobalOutput.perror("TSocket::open() socket() " + getSocketInfo(), errno_copy);
+    }
     throw TTransportException(TTransportException::NOT_OPEN, "socket()", errno_copy);
   }
 
@@ -314,13 +316,17 @@ void TSocket::openConnection(struct addrinfo* res) {
   if (connTimeout_ > 0) {
     if (-1 == THRIFT_FCNTL(socket_, THRIFT_F_SETFL, flags | THRIFT_O_NONBLOCK)) {
       int errno_copy = THRIFT_GET_SOCKET_ERROR;
-      GlobalOutput.perror("TSocket::open() THRIFT_FCNTL() " + getSocketInfo(), errno_copy);
+      if (logError) {
+        GlobalOutput.perror("TSocket::open() THRIFT_FCNTL() " + getSocketInfo(), errno_copy);
+      }
       throw TTransportException(TTransportException::NOT_OPEN, "THRIFT_FCNTL() failed", errno_copy);
     }
   } else {
     if (-1 == THRIFT_FCNTL(socket_, THRIFT_F_SETFL, flags & ~THRIFT_O_NONBLOCK)) {
       int errno_copy = THRIFT_GET_SOCKET_ERROR;
-      GlobalOutput.perror("TSocket::open() THRIFT_FCNTL " + getSocketInfo(), errno_copy);
+      if (logError) {
+        GlobalOutput.perror("TSocket::open() THRIFT_FCNTL " + getSocketInfo(), errno_copy);
+      }
       throw TTransportException(TTransportException::NOT_OPEN, "THRIFT_FCNTL() failed", errno_copy);
     }
   }
@@ -357,7 +363,9 @@ void TSocket::openConnection(struct addrinfo* res) {
   if ((THRIFT_GET_SOCKET_ERROR != THRIFT_EINPROGRESS)
       && (THRIFT_GET_SOCKET_ERROR != THRIFT_EWOULDBLOCK)) {
     int errno_copy = THRIFT_GET_SOCKET_ERROR;
-    GlobalOutput.perror("TSocket::open() connect() " + getSocketInfo(), errno_copy);
+    if (logError) {
+      GlobalOutput.perror("TSocket::open() connect() " + getSocketInfo(), errno_copy);
+    }
     throw TTransportException(TTransportException::NOT_OPEN, "connect() failed", errno_copy);
   }
 
@@ -375,25 +383,33 @@ void TSocket::openConnection(struct addrinfo* res) {
     int ret2 = getsockopt(socket_, SOL_SOCKET, SO_ERROR, cast_sockopt(&val), &lon);
     if (ret2 == -1) {
       int errno_copy = THRIFT_GET_SOCKET_ERROR;
-      GlobalOutput.perror("TSocket::open() getsockopt() " + getSocketInfo(), errno_copy);
+      if (logError) {
+        GlobalOutput.perror("TSocket::open() getsockopt() " + getSocketInfo(), errno_copy);
+      }
       throw TTransportException(TTransportException::NOT_OPEN, "getsockopt()", errno_copy);
     }
     // no errors on socket, go to town
     if (val == 0) {
       goto done;
     }
-    GlobalOutput.perror("TSocket::open() error on socket (after THRIFT_POLL) " + getSocketInfo(),
-                        val);
+    if (logError) {
+      GlobalOutput.perror("TSocket::open() error on socket (after THRIFT_POLL) " +
+          getSocketInfo(), val);
+    }
     throw TTransportException(TTransportException::NOT_OPEN, "socket open() error", val);
   } else if (ret == 0) {
     // socket timed out
     string errStr = "TSocket::open() timed out " + getSocketInfo();
-    GlobalOutput(errStr.c_str());
+    if (logError) {
+      GlobalOutput(errStr.c_str());
+    }
     throw TTransportException(TTransportException::NOT_OPEN, "open() timed out");
   } else {
     // error on THRIFT_POLL()
     int errno_copy = THRIFT_GET_SOCKET_ERROR;
-    GlobalOutput.perror("TSocket::open() THRIFT_POLL() " + getSocketInfo(), errno_copy);
+    if (logError) {
+      GlobalOutput.perror("TSocket::open() THRIFT_POLL() " + getSocketInfo(), errno_copy);
+    }
     throw TTransportException(TTransportException::NOT_OPEN, "THRIFT_POLL() failed", errno_copy);
   }
 
@@ -401,7 +417,9 @@ done:
   // Set socket back to normal mode (blocking)
   if (-1 == THRIFT_FCNTL(socket_, THRIFT_F_SETFL, flags)) {
     int errno_copy = THRIFT_GET_SOCKET_ERROR;
-    GlobalOutput.perror("TSocket::open() THRIFT_FCNTL " + getSocketInfo(), errno_copy);
+    if (logError) {
+      GlobalOutput.perror("TSocket::open() THRIFT_FCNTL " + getSocketInfo(), errno_copy);
+    }
     throw TTransportException(TTransportException::NOT_OPEN, "THRIFT_FCNTL() failed", errno_copy);
   }
 
@@ -480,7 +498,7 @@ void TSocket::local_open() {
   // connects or push the exception up.
   for (res = res0; res; res = res->ai_next) {
     try {
-      openConnection(res);
+      openConnection(res, res->ai_next == nullptr);
       break;
     } catch (TTransportException&) {
       if (res->ai_next) {

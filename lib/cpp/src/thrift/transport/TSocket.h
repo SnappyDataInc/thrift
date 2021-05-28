@@ -317,7 +317,7 @@ public:
 
 protected:
   /** connect, called by open */
-  void openConnection(struct addrinfo* res);
+  void openConnection(struct addrinfo* res, bool logError = true);
 
   /** Host to connect to */
   std::string host_;

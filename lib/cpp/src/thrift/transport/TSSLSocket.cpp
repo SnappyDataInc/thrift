@@ -340,7 +340,7 @@ void TSSLSocket::open() {
 */
 void TSSLSocket::close() {
   if (ssl_ != nullptr) {
-    if (!TSSLSocketFactory::inExit()) try {
+    if (openSSLInitialized) try {
       int rc;
       int errno_copy = 0;
       int error = 0;
@@ -854,7 +854,6 @@ unsigned int TSSLSocket::waitForEvent(bool wantRead) {
 uint64_t TSSLSocketFactory::count_ = 0;
 Mutex TSSLSocketFactory::mutex_;
 bool TSSLSocketFactory::manualOpenSSLInitialization_ = false;
-bool TSSLSocketFactory::inExit_ = false;
 
 TSSLSocketFactory::TSSLSocketFactory(SSLProtocol protocol) : server_(false) {
   Guard guard(mutex_);
